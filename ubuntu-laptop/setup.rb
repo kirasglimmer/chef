@@ -18,6 +18,15 @@ end
 
 
 # -----------------------------------------------------------
+# Install system tools
+package 'gparted'
+package 'tree'
+
+#http://ubuntuhandbook.org/index.php/2014/04/enable-ssh-ubuntu-14-04-trusty-tahr/
+package 'openssh-server'
+
+
+# -----------------------------------------------------------
 # Install git
 package 'git' do
 	options "--install-suggests"
