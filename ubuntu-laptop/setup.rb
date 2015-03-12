@@ -33,6 +33,8 @@ package 'git' do
 	options '-o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"'
 	action :install
 end
+package 'xclip'
+
 
 # -----------------------------------------------------------
 # Install sublime text
@@ -280,3 +282,25 @@ package 'binutils-avr'
 package 'gdb-avr'
 package 'avr-libc'
 package 'avrdude'
+package 'avra'
+# likely need to install Avra from 
+
+# -----------------------------------------------------------
+# Install mono-develop
+execute "install mono-develop key" do
+	command "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
+end
+file '/etc/apt/sources.list.d/mono-xamarin.list' do
+	content 'deb http://download.mono-project.com/repo/debian wheezy main
+'
+	action :create
+	mode '0644'
+	group 'root'
+	owner 'root'
+end
+package 'mono-complete'
+#http://typecastexception.com/post/2014/10/19/Setting-Up-for-Mono-Development-in-Linux-MintUbuntu.aspx#Making-Nuget-Package-Restore-Work-in-MonoDevelop
+execute "install ssl certificates" do
+	command "mozroots --import --sync"
+end
+#http://askubuntu.com/questions/481002/how-to-install-nuget-addin-for-monodevelop
