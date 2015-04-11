@@ -283,7 +283,10 @@ package 'gdb-avr'
 package 'avr-libc'
 package 'avrdude'
 package 'avra'
-# likely need to install Avra from 
+package 'arduino-mk'
+package 'g++'
+package 'gcc'
+package 'automake'
 
 # -----------------------------------------------------------
 # Install mono-develop
