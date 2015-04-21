@@ -91,6 +91,19 @@ package 'dvdbackup' do
 	action :install
 end
 
+# Spotify
+file '/etc/apt/sources.list.d/spotify.list' do
+	content 'deb http://repository.spotify.com stable non-free'
+	action :create
+	mode '0755'
+	group 'root'
+	owner 'root'
+end
+execute "install spotify key" do
+	command 'apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 94558F59'
+end
+package 'spotify'
+
 # MKVTools
 # https://www.bunkus.org/videotools/mkvtoolnix/downloads.html
 file '/etc/apt/sources.list.d/mkvtools.list' do
