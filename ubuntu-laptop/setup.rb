@@ -102,7 +102,11 @@ end
 execute "install spotify key" do
 	command 'apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 94558F59'
 end
-package 'spotify'
+package 'spotify-client' do
+	options "--force-yes"
+	options "-y"
+	action :install
+end
 
 # MKVTools
 # https://www.bunkus.org/videotools/mkvtoolnix/downloads.html
