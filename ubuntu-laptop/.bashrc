@@ -8,7 +8,7 @@ GIT_PS1_SHOWCOLORHINTS=1
 # ----------------------------------------------------------------
 # Load in the git branch prompt script.
 # http://code-worrier.com/blog/git-branch-in-bash-prompt/
-# https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
+# https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
 source ~/.git-prompt.sh
 
 # original PS1 (LM17.1)
