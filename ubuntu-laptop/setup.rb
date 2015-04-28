@@ -136,7 +136,12 @@ package 'spotify-client' do
 end
 package 'audacity'
 
-# -----------------------------------------------------------
+
+# ----------------------------------------------------------
+# Other media tools
+package 'cheese'
+
+# ----------------------------------------------------------
 # WINE, YNAB and DropBox
 package 'wine' do
 	options "--install-suggests"
