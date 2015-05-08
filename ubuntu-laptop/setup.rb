@@ -1,5 +1,12 @@
+#
+# install chef with
+#   wget -q -O - https://www.chef.io/chef/install.sh | sudo bash
+#
+# download this file:
+#   wget https://raw.githubusercontent.com/dachew/chef/master/ubuntu-laptop/setup.rb -O setup.rb
+#
 # run with:
-# sudo chef-apply personal-setup.rb
+#   sudo chef-apply personal-setup.rb
 # -----------------------------------------------------------
 #user_home = "/#{node[:matching_node][:user]}"
 user = 'matthew'
@@ -26,6 +33,11 @@ package 'minicom'
 
 #http://ubuntuhandbook.org/index.php/2014/04/enable-ssh-ubuntu-14-04-trusty-tahr/
 package 'openssh-server'
+
+execute "install tuxboot key" do
+	command 'apt-add-repository ppa:thomas.tsai/ubuntu-tuxboot'
+end
+package 'tuxboot'
 
 
 # -----------------------------------------------------------
