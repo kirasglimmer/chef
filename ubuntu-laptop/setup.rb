@@ -47,6 +47,7 @@ package 'git' do
 	options '-o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"'
 	action :install
 end
+package 'git-cola'
 package 'xclip'
 
 
