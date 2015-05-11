@@ -325,6 +325,7 @@ package 'arduino-mk'
 package 'g++'
 package 'gcc'
 package 'automake'
+package 'ddd'
 
 # -----------------------------------------------------------
 # Install mono-develop
