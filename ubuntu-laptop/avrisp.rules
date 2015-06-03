@@ -1,0 +1,12 @@
+# Place this file in /etc/udev/rules.d/avrisp.rules
+
+SUBSYSTEM!="usb_device", ACTION!="add", GOTO="avrisp_end"
+
+# Atmel Corp. JTAG ICE mkII
+ATTR{idVendor}=="03eb", ATTR{idProduct}=="2103", MODE="660", GROUP="dialout"
+# Atmel Corp. AVRISP mkII
+ATTR{idVendor}=="03eb", ATTR{idProduct}=="2104", MODE="660", GROUP="dialout"
+# Atmel Corp. Dragon
+ATTR{idVendor}=="03eb", ATTR{idProduct}=="2107", MODE="660", GROUP="dialout"
+
+LABEL="avrisp_end"
