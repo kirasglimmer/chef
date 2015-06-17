@@ -153,6 +153,8 @@ package 'audacity'
 # ----------------------------------------------------------
 # Other media tools
 package 'cheese'
+package 'imagemagick'
+package 'exiv2'
 
 # ----------------------------------------------------------
 # WINE, YNAB and DropBox
