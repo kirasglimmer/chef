@@ -1,0 +1,56 @@
+#!/bin/sh
+# File: "/etc/pm/sleep.d/20_custom-xhci_hcd".
+ 
+#inspired by http://art.ubuntuforums.org/showpost.php?p=9744970&postcount=19
+#...and http://thecodecentral.com/2011/01/18/fix-ubuntu-10-10-suspendhibernate-not-working-bug    
+# tidied by tqzzaa :)
+#also inspiried by http://unix.stackexchange.com/questions/138220/no-usb-3-arch-linux-3-15-1
+ 
+ 
+VERSION=1.1
+DEV_LIST=/tmp/usb-dev-list
+DRIVERS_DIR=/sys/bus/pci/drivers
+DRIVERS="ehci xhci" # ehci_hcd, xhci_hcd
+HEX="[[:xdigit:]]"
+MAX_BIND_ATTEMPTS=2
+BIND_WAIT=0.1
+ 
+unbindDev() {
+  #unbind
+  echo "Unbinding xhci device"
+  echo -n "0000:04:00.0" > /sys/bus/pci/drivers/xhci_hcd/unbind
+  echo -n > $DEV_LIST 2>/dev/null
+  for driver in $DRIVERS; do
+    DDIR=$DRIVERS_DIR/${driver}_hcd
+    for dev in `ls $DDIR 2>/dev/null | egrep "^$HEX+:$HEX+:$HEX"`; do
+      echo -n "$dev" > $DDIR/unbind
+      echo "$driver $dev" >> $DEV_LIST
+    done
+  done
+}
+ 
+bindDev() {
+  # bind
+  echo "Binding xhci device"
+  ehco -n "0000:04:00.0" > /sys/bus/pci/drivers/xhci_hcd/bind
+  if [ -s $DEV_LIST ]; then
+    while read driver dev; do
+      DDIR=$DRIVERS_DIR/${driver}_hcd
+      while [ $((MAX_BIND_ATTEMPTS)) -gt 0 ]; do
+          echo -n "$dev" > $DDIR/bind
+          if [ ! -L "$DDIR/$dev" ]; then
+            sleep $BIND_WAIT
+          else
+            break
+          fi
+          MAX_BIND_ATTEMPTS=$((MAX_BIND_ATTEMPTS-1))
+      done  
+    done < $DEV_LIST
+  fi
+  rm $DEV_LIST 2>/dev/null
+}
+ 
+case "$1" in
+  hibernate|suspend) unbindDev;;
+  resume|thaw)       bindDev;;
+esac

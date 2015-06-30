@@ -1,0 +1,1 @@
+SUSPEND_MODULES="xhci ehci_hcd xhci_hcd xhci-hcd ehci-hcd"

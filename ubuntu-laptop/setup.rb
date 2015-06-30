@@ -189,93 +189,38 @@ end
 
 # -----------------------------------------------------------
 # Hibernation support
-file '/var/lib/polkit-1/localauthority/50-local.d/com.ubuntu.enable-hibernate.pkla' do
-	content '[Re-enable hibernate by default in upower]
-Identity=unix-user:*
-Action=org.freedesktop.upower.hibernate
-ResultActive=yes
+template '/var/lib/polkit-1/localauthority/50-local.d/com.ubuntu.enable-hibernate.pkla' do
+	source 'com.ubuntu.enable-hibernate.pkla'
+	action :create
+	mode '0744'
+	group 'root'
+	owner 'root'
+end
+template '/etc/pm/sleep.d/modules' do
+	source 'sleep_d_modules'
+	mode '0744'
+	group 'root'
+	owner 'root'
+end
+template '/etc/pm/sleep.d/20_custom-xhci_hcd' do
+	source 'custom_xhci.erb'
+	mode '0744'
+	group 'root'
+	owner 'root'
+end
+# http://chriseiffel.com/everything-linux/step-by-step-how-to-get-hibernate-working-for-linux-ubuntu-11-04-mint-11/#not-resuming-session
+# capture swap partition UUID
+resumeid = `blkid /dev/sda5 -o value -s UUID`
+template '/etc/initramfs-tools/conf.d/resume' do
+	source 'resume.erb'
+	variables ({
+		:resumeid => #{resumeid}
+	})
+	mode '0744'
+	group 'root'
+	owner 'root'
+end
 
-[Re-enable hibernate by default in logind]
-Identity=unix-user:*
-Action=org.freedesktop.login1.hibernate
-ResultActive=yes
-'
-	action :create
-	mode '0744'
-	group 'root'
-	owner 'root'
-end
-file '/etc/pm/sleep.d/modules' do
-	content 'SUSPEND_MODULES="xhci ehci_hcd xhci_hcd xhci-hcd ehci-hcd"
-'
-	action :create
-	mode '0744'
-	group 'root'
-	owner 'root'
-end
-file '/etc/pm/sleep.d/20_custom-xhci_hcd' do
-	content '#!/bin/sh
-# File: "/etc/pm/sleep.d/20_custom-xhci_hcd".
- 
-#inspired by http://art.ubuntuforums.org/showpost.php?p=9744970&postcount=19
-#...and http://thecodecentral.com/2011/01/18/fix-ubuntu-10-10-suspendhibernate-not-working-bug    
-# tidied by tqzzaa :)
-#also inspiried by http://unix.stackexchange.com/questions/138220/no-usb-3-arch-linux-3-15-1
- 
- 
-VERSION=1.1
-DEV_LIST=/tmp/usb-dev-list
-DRIVERS_DIR=/sys/bus/pci/drivers
-DRIVERS="ehci xhci" # ehci_hcd, xhci_hcd
-HEX="[[:xdigit:]]"
-MAX_BIND_ATTEMPTS=2
-BIND_WAIT=0.1
- 
-unbindDev() {
-  #unbind
-  echo "Unbinding xhci device"
-  echo -n "0000:04:00.0" > /sys/bus/pci/drivers/xhci_hcd/unbind
-  echo -n > $DEV_LIST 2>/dev/null
-  for driver in $DRIVERS; do
-    DDIR=$DRIVERS_DIR/${driver}_hcd
-    for dev in `ls $DDIR 2>/dev/null | egrep "^$HEX+:$HEX+:$HEX"`; do
-      echo -n "$dev" > $DDIR/unbind
-      echo "$driver $dev" >> $DEV_LIST
-    done
-  done
-}
- 
-bindDev() {
-  # bind
-  echo "Binding xhci device"
-  ehco -n "0000:04:00.0" > /sys/bus/pci/drivers/xhci_hcd/bind
-  if [ -s $DEV_LIST ]; then
-    while read driver dev; do
-      DDIR=$DRIVERS_DIR/${driver}_hcd
-      while [ $((MAX_BIND_ATTEMPTS)) -gt 0 ]; do
-          echo -n "$dev" > $DDIR/bind
-          if [ ! -L "$DDIR/$dev" ]; then
-            sleep $BIND_WAIT
-          else
-            break
-          fi
-          MAX_BIND_ATTEMPTS=$((MAX_BIND_ATTEMPTS-1))
-      done  
-    done < $DEV_LIST
-  fi
-  rm $DEV_LIST 2>/dev/null
-}
- 
-case "$1" in
-  hibernate|suspend) unbindDev;;
-  resume|thaw)       bindDev;;
-esac
-'
-	action :create
-	mode '0744'
-	group 'root'
-	owner 'root'
-end
 package 'pm-utils' do
 	options "--install-suggests"
 	action :install
@@ -297,8 +242,8 @@ file '/etc/apt/sources.list.d/ubiquiti.list' do
 	group 'root'
 	owner 'root'
 end
-# set JAVA_HOME variable in /etc/init.d/unifi to "JAVA_HOME=/usr/lib/jvm/java-6-openjdk"
-execute "install ubiquiti key" do
+# set JAVA_HOME variable in /etc/init.d/unifi to JAVA_HOME=/usr/lib/jvm/java-6-openjdk
+execute 'install ubiquiti key' do
 	command 'apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50'
 end
 # probably best to use a template here to modify the ubiquiti scripts...
