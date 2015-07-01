@@ -192,19 +192,19 @@ end
 template '/var/lib/polkit-1/localauthority/50-local.d/com.ubuntu.enable-hibernate.pkla' do
 	source 'com.ubuntu.enable-hibernate.pkla'
 	action :create
-	mode '0744'
+	mode '0755'
 	group 'root'
 	owner 'root'
 end
 template '/etc/pm/sleep.d/modules' do
 	source 'sleep_d_modules'
-	mode '0744'
+	mode '0755'
 	group 'root'
 	owner 'root'
 end
 template '/etc/pm/sleep.d/20_custom-xhci_hcd' do
 	source 'custom_xhci.erb'
-	mode '0744'
+	mode '0755'
 	group 'root'
 	owner 'root'
 end
@@ -216,7 +216,7 @@ template '/etc/initramfs-tools/conf.d/resume' do
 	variables ({
 		:resumeid => #{resumeid}
 	})
-	mode '0744'
+	mode '0755'
 	group 'root'
 	owner 'root'
 end
