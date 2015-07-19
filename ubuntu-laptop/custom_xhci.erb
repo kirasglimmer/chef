@@ -14,11 +14,16 @@ DRIVERS="ehci xhci" # ehci_hcd, xhci_hcd
 HEX="[[:xdigit:]]"
 MAX_BIND_ATTEMPTS=2
 BIND_WAIT=0.1
- 
+
+# USB Devices:
+# 0000:00:1d.0 USB 2.0 hub
+# 0000:03:00.0 USB 3.0 hub
+
 unbindDev() {
   #unbind
   echo "Unbinding xhci device"
-  echo -n "0000:04:00.0" > /sys/bus/pci/drivers/xhci_hcd/unbind
+  echo -n "0000:00:1d.0" >  /sys/bus/pci/drivers/xhci_hcd/unbind
+  echo -n "0000:03:00.0" >> /sys/bus/pci/drivers/xhci_hcd/unbind
   echo -n > $DEV_LIST 2>/dev/null
   for driver in $DRIVERS; do
     DDIR=$DRIVERS_DIR/${driver}_hcd
@@ -32,7 +37,9 @@ unbindDev() {
 bindDev() {
   # bind
   echo "Binding xhci device"
-  ehco -n "0000:04:00.0" > /sys/bus/pci/drivers/xhci_hcd/bind
+  echo -n "0000:00:1d.0" >  /sys/bus/pci/drivers/xhci_hcd/bind
+  echo -n "0000:03:00.0" >> /sys/bus/pci/drivers/xhci_hcd/bind
+  echo -n > $DEV_LIST 2>/dev/null
   if [ -s $DEV_LIST ]; then
     while read driver dev; do
       DDIR=$DRIVERS_DIR/${driver}_hcd
