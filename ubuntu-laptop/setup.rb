@@ -30,6 +30,9 @@ package 'gparted'
 package 'tree'
 package 'cu'
 package 'minicom'
+#package 'jmtpfs'
+package 'mtpfs'
+package 'mtp-tools'
 
 #http://ubuntuhandbook.org/index.php/2014/04/enable-ssh-ubuntu-14-04-trusty-tahr/
 package 'openssh-server'
