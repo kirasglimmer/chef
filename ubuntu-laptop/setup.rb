@@ -33,6 +33,8 @@ package 'minicom'
 #package 'jmtpfs'
 package 'mtpfs'
 package 'mtp-tools'
+package 'exfat-utils'
+package 'exfat-fuse'
 
 #http://ubuntuhandbook.org/index.php/2014/04/enable-ssh-ubuntu-14-04-trusty-tahr/
 package 'openssh-server'
