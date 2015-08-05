@@ -65,6 +65,19 @@ end
 
 
 # -----------------------------------------------------------------------------
+# GREIMAN
+# -----------------------------------------------------------------------------
+git '#{home}/src/greiman/sdfat' do
+	repository 'git@github.com:greiman/SdFat.git'
+	revision 'master'
+	action :sync
+end
+execute 'install greiman sdfat lib' do
+	command 'cp -R #{home}/src/greiman/sdfat/SdFat/ #{home}/Arduino/libraries/'
+end
+
+
+# -----------------------------------------------------------------------------
 # SYNAPSEWARE
 # -----------------------------------------------------------------------------
 %w[ libs avra enterprise ].each do |repo|
