@@ -72,8 +72,20 @@ git '#{home}/src/greiman/sdfat' do
 	revision 'master'
 	action :sync
 end
-execute 'install greiman sdfat lib' do
+execute 'install greiman sdfat' do
 	command 'cp -R #{home}/src/greiman/sdfat/SdFat/ #{home}/Arduino/libraries/'
+end
+
+git '#{home}/src/greiman/SdFat_20131225' do
+  repository 'git@github.com:synapseware/SdFatLib.git'
+  revision 'master'
+  action :sync
+end
+execute 'checkout correct sdfatlib tag' do
+  command 'git checkout tags/v20131225'
+end
+execute 'install greiman sdfatlib' do
+  command 'cp -R #{home}/src/greiman/SdFat_20131225/ #{home}/Arduino/libraries/'
 end
 
 
