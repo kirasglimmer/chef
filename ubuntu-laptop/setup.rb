@@ -161,6 +161,7 @@ package 'cheese'
 package 'imagemagick'
 package 'exiv2'
 
+
 # ----------------------------------------------------------
 # WINE, YNAB and DropBox
 package 'wine' do
@@ -279,6 +280,9 @@ package 'g++'
 package 'gcc'
 package 'automake'
 package 'ddd'
+package 'arduino'
+package 'arduino-core'
+
 
 # -----------------------------------------------------------
 # Install mono-develop
@@ -299,3 +303,9 @@ execute "install ssl certificates" do
 	command "mozroots --import --sync"
 end
 #http://askubuntu.com/questions/481002/how-to-install-nuget-addin-for-monodevelop
+
+
+# -----------------------------------------------------------
+# Clone github repo's
+# call into the repositories.rb chef script...
+
