@@ -62,6 +62,9 @@ end
 execute 'install mattairtech arduino support' do
 	command 'cp -R #{home}/src/MattairTech_Arduino_1.0.5.1/hardware/ #{home}/Arduino/'
 end
+execute 'install mattairtech arduino libraries' do
+  command 'cp -R #{home}/src/MattairTech_Arduino_1.0.5.1/libraries/ #{home}/Arduino/'
+end
 
 
 # -----------------------------------------------------------------------------
