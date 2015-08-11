@@ -241,7 +241,7 @@ end
 # Unifi/Ubiquiti
 # https://community.ubnt.com/t5/UniFi-Updates-Blog/UniFi-3-2-10-is-released/ba-p/1165532
 file '/etc/apt/sources.list.d/ubiquiti.list' do
-	content 'deb http://www.ubnt.com/downloads/unifi/distros/deb/ubuntu ubuntu ubiquiti
+	content 'deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti
 '
 	action :create
 	mode '0644'
