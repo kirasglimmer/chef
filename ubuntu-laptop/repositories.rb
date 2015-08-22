@@ -68,6 +68,19 @@ end
 
 
 # -----------------------------------------------------------------------------
+# MINIMUS
+# -----------------------------------------------------------------------------
+git '#{home}/src/pbrook/minimus-arduino' do
+  repository 'git clone git://github.com/pbrook/minimus-arduino.git'
+  revision 'master'
+  action :sync
+end
+execute 'install minimus arduino libraries' do
+  command 'cp -R #{home}/src/pbrook/minimus-arduino/variants/ #{home}/Arduino/hardware/minimus/avr/'
+end
+
+
+# -----------------------------------------------------------------------------
 # GREIMAN
 # -----------------------------------------------------------------------------
 git '#{home}/src/greiman/sdfat' do
