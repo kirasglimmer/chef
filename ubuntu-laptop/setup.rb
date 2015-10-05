@@ -36,7 +36,7 @@ package 'mtp-tools'
 package 'exfat-utils'
 package 'exfat-fuse'
 package 'emacs24'
-
+package 'ack-grep'
 
 #http://ubuntuhandbook.org/index.php/2014/04/enable-ssh-ubuntu-14-04-trusty-tahr/
 package 'openssh-server'
