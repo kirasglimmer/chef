@@ -138,6 +138,14 @@ end
 
 
 # -----------------------------------------------------------
+# ffmpeg
+execute "add mc3man repository" do
+	command 'add-apt-repository ppa:mc3man/trusty-media'
+end
+package 'ffmpeg'
+
+
+# -----------------------------------------------------------
 # Spotify
 file '/etc/apt/sources.list.d/spotify.list' do
 	content 'deb http://repository.spotify.com stable non-free'
