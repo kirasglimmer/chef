@@ -42,7 +42,7 @@ package 'ack-grep'
 package 'openssh-server'
 
 execute "install tuxboot key" do
-	command 'apt-add-repository ppa:thomas.tsai/ubuntu-tuxboot'
+	command 'apt-add-repository -y ppa:thomas.tsai/ubuntu-tuxboot'
 end
 package 'tuxboot'
 
@@ -138,11 +138,8 @@ end
 
 
 # -----------------------------------------------------------
-# ffmpeg
-execute "add mc3man repository" do
-	command 'add-apt-repository ppa:mc3man/trusty-media'
-end
-package 'ffmpeg'
+# libav-tools
+package 'libav-tools'
 
 
 # -----------------------------------------------------------
@@ -155,7 +152,7 @@ file '/etc/apt/sources.list.d/spotify.list' do
 	owner 'root'
 end
 execute "install spotify key" do
-	command 'apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 94558F59'
+	command 'apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BBEBDCB318AD50EC6865090613B00F1FD2C19886'
 end
 package 'spotify-client' do
 	options "--force-yes"
@@ -205,21 +202,26 @@ end
 
 # -----------------------------------------------------------
 # Hibernation support
-template '/var/lib/polkit-1/localauthority/50-local.d/com.ubuntu.enable-hibernate.pkla' do
-	source 'com.ubuntu.enable-hibernate.pkla'
+directory '/var/lib/polkit-1/localauthority/50-local.d/' do
+	mode '0755'
+	group 'root'
+	owner 'root'
 	action :create
+end
+template '/var/lib/polkit-1/localauthority/50-local.d/com.ubuntu.enable-hibernate.pkla' do
+	source 'com-ubuntu-enable-hibernate-pkla.erb'
 	mode '0755'
 	group 'root'
 	owner 'root'
 end
 template '/etc/pm/sleep.d/modules' do
-	source 'sleep_d_modules'
+	source './templates/sleep_d_modules.erb'
 	mode '0755'
 	group 'root'
 	owner 'root'
 end
 template '/etc/pm/sleep.d/20_custom-xhci_hcd' do
-	source 'custom_xhci.erb'
+	source './templates/custom_xhci.erb'
 	mode '0755'
 	group 'root'
 	owner 'root'
@@ -228,10 +230,10 @@ end
 # capture swap partition UUID
 resumeid = `blkid /dev/sda5 -o value -s UUID`
 template '/etc/initramfs-tools/conf.d/resume' do
-	source 'resume.erb'
-	variables ({
-		:resumeid => #{resumeid}
-	})
+	source './templates/resume.erb'
+	variables(
+		resumeid: resumeid
+	)
 	mode '0755'
 	group 'root'
 	owner 'root'
