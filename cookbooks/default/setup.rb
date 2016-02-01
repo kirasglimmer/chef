@@ -215,13 +215,13 @@ template '/var/lib/polkit-1/localauthority/50-local.d/com.ubuntu.enable-hibernat
 	owner 'root'
 end
 template '/etc/pm/sleep.d/modules' do
-	source './templates/sleep_d_modules.erb'
+	source 'sleep_d_modules.erb'
 	mode '0755'
 	group 'root'
 	owner 'root'
 end
 template '/etc/pm/sleep.d/20_custom-xhci_hcd' do
-	source './templates/custom_xhci.erb'
+	source 'custom_xhci.erb'
 	mode '0755'
 	group 'root'
 	owner 'root'

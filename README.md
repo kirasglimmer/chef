@@ -30,3 +30,7 @@ wget https://raw.githubusercontent.com/dachew/chef/master/ubuntu-laptop/setup.rb
 sudo chef-apply personal-setup.rb
 ```
 
+Alternate method:
+```bash
+chef-client --local -o recipe['default']
+```
