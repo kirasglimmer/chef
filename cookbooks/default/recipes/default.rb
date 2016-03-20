@@ -259,6 +259,7 @@ package 'pm-utils' do
 	options "--install-suggests"
 	action :install
 end
+package 'powertop'
 package 'gparted' do
 	options "--install-suggests"
 	action :install
