@@ -35,7 +35,7 @@ package 'mtpfs'
 package 'mtp-tools'
 package 'exfat-utils'
 package 'exfat-fuse'
-package 'emacs24'
+#package 'emacs24'
 package 'ack-grep'
 
 #http://ubuntuhandbook.org/index.php/2014/04/enable-ssh-ubuntu-14-04-trusty-tahr/
@@ -202,6 +202,7 @@ end
 
 # -----------------------------------------------------------
 # Hibernation support
+=begin
 directory '/var/lib/polkit-1/localauthority/50-local.d/' do
 	mode '0755'
 	group 'root'
@@ -243,6 +244,7 @@ package 'pm-utils' do
 	options "--install-suggests"
 	action :install
 end
+=end
 package 'gparted' do
 	options "--install-suggests"
 	action :install
