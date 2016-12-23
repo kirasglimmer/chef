@@ -49,22 +49,19 @@ package 'tuxboot'
 
 # -----------------------------------------------------------
 # Install git
-package 'git' do
-	options "--install-suggests"
-	options '-o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"'
-	action :install
-end
+package 'git'
 package 'git-cola'
 package 'xclip'
 
 
 # -----------------------------------------------------------
 # Install sublime text
-package 'sublime-text' do
-	options "--install-suggests"
-	options '-o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"'
-	action :install
+execute "install sublime text 3" do
+	command "add-apt-repository ppa:webupd8team/sublime-text-3"
+	command "apt update"
 end
+package "sublime-text"
+
 
 # -----------------------------------------------------------
 # Install digiKam
@@ -97,21 +94,13 @@ end
 # -----------------------------------------------------------
 # Install media tools for dvd cloning
 # from /etc/apt/souces.list.d/mkvtools.list
-package 'handbrake' do
-	options "--install-suggests"
-	options '-o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"'
-	action :install
+execute "install handbrake and handbrake ppa" do
+	command "add-apt-repository ppa:stebbins/handbrake-releases"
+	command "apt update"
 end
-package 'handbrake-cli' do
-	options "--install-suggests"
-	options '-o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"'
-	action :install
-end
-package 'dvdbackup' do
-	options "--install-suggests"
-	options '-o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"'
-	action :install
-end
+package "handbrake-gtk"
+package "handbrake-cli"
+package "dvdbackup"
 
 # MKVTools
 # https://www.bunkus.org/videotools/mkvtoolnix/downloads.html
@@ -127,14 +116,8 @@ end
 execute "install bunkus key" do
 	command 'wget -q -O - https://www.bunkus.org/gpg-pub-moritzbunkus.txt | apt-key add -'
 end
-package 'mkvtoolnix' do
-	options "--install-suggests -f -y"
-	action :install
-end
-package 'mkvtoolnix-gui' do
-	options "--install-suggests -f -y"
-	action :install
-end
+package 'mkvtoolnix'
+package 'mkvtoolnix-gui'
 
 
 # -----------------------------------------------------------
@@ -167,115 +150,6 @@ package 'audacity'
 package 'cheese'
 package 'imagemagick'
 package 'exiv2'
-
-
-# ----------------------------------------------------------
-# WINE, YNAB and DropBox
-package 'wine' do
-	options "--install-suggests"
-	action :install
-end
-package 'wine-mono' do
-	options "--install-suggests"
-	action :install
-end
-package 'wine-gecko' do
-	options "--install-suggests"
-	action :install
-end
-package 'dropbox' do
-	options "--install-suggests"
-	action :install
-end
-execute "download ynab" do
-	command "wget -O - https://raw.github.com/WolverineFan/YNABLinuxInstall/master/YNAB4_LinuxInstall.pl > /tmp/ynab4_linuxinstall.pl"
-end
-file '/tmp/ynab4_linuxinstall.pl' do
-	action :create
-	mode '0700'
-end
-#execute "install ynab" do
-#	options "3"
-#	command "perl /tmp/ynab4_linuxinstall.pl"
-#end
-
-
-# -----------------------------------------------------------
-# Hibernation support
-=begin
-directory '/var/lib/polkit-1/localauthority/50-local.d/' do
-	mode '0755'
-	group 'root'
-	owner 'root'
-	action :create
-end
-template '/var/lib/polkit-1/localauthority/50-local.d/com.ubuntu.enable-hibernate.pkla' do
-	source 'com-ubuntu-enable-hibernate-pkla.erb'
-	mode '0755'
-	group 'root'
-	owner 'root'
-end
-template '/etc/pm/sleep.d/modules' do
-	source 'sleep_d_modules.erb'
-	mode '0755'
-	group 'root'
-	owner 'root'
-end
-template '/etc/pm/sleep.d/20_custom-xhci_hcd' do
-	source 'custom_xhci.erb'
-	mode '0755'
-	group 'root'
-	owner 'root'
-end
-# http://chriseiffel.com/everything-linux/step-by-step-how-to-get-hibernate-working-for-linux-ubuntu-11-04-mint-11/#not-resuming-session
-# capture swap partition UUID
-resumeid = `blkid /dev/sda5 -o value -s UUID`
-template '/etc/initramfs-tools/conf.d/resume' do
-	source './templates/resume.erb'
-	variables(
-		resumeid: resumeid
-	)
-	mode '0755'
-	group 'root'
-	owner 'root'
-end
-
-package 'pm-utils' do
-	options "--install-suggests"
-	action :install
-end
-=end
-package 'gparted' do
-	options "--install-suggests"
-	action :install
-end
-
-
-# -----------------------------------------------------------
-# Unifi/Ubiquiti
-# https://community.ubnt.com/t5/UniFi-Updates-Blog/UniFi-3-2-10-is-released/ba-p/1165532
-file '/etc/apt/sources.list.d/ubiquiti.list' do
-	content 'deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti
-'
-	action :create
-	mode '0644'
-	group 'root'
-	owner 'root'
-end
-# set JAVA_HOME variable in /etc/init.d/unifi to JAVA_HOME=/usr/lib/jvm/java-6-openjdk
-execute 'install ubiquiti key' do
-	command 'apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50'
-end
-# probably best to use a template here to modify the ubiquiti scripts...
-=begin
-execute "apt-get update" do
-	command "apt-get update"
-end
-package 'unifi' do
-	options "--install-suggests -f -y"
-	action :install
-end
-=end
 
 
 # -----------------------------------------------------------
@@ -317,9 +191,4 @@ execute "install ssl certificates" do
 	command "mozroots --import --sync"
 end
 #http://askubuntu.com/questions/481002/how-to-install-nuget-addin-for-monodevelop
-
-
-# -----------------------------------------------------------
-# Clone github repo's
-# call into the repositories.rb chef script...
 

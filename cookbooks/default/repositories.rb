@@ -108,9 +108,12 @@ end
 # -----------------------------------------------------------------------------
 # SYNAPSEWARE
 # -----------------------------------------------------------------------------
-%w[ libs avra enterprise ].each do |repo|
-  git '#{home}/src/synapseware/#{repo}' do
-    repository 'git@github.com:Synapseware/#{repo}.git'
+execute 'get the list of all the Synapseware repositories' do
+	command 'curl -s https://api.github.com/orgs/Synapseware/repos?per_page=200 | grep "\"url\":" | egrep -o -i "(/Synapseware/.*?)[^\",]" > /tmp/repos'
+end
+File.open "/tmp/repos"  do |repo|
+  git '#{home}/src/#{repo}' do
+    repository 'git@github.com:#{repo}.git'
     revision 'master'
     action :sync
   end
